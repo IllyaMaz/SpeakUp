@@ -1,8 +1,12 @@
 package com.example.speakup.controller.groupController;
 
 import com.example.speakup.auth.CustomUserDetails;
+import com.example.speakup.entity.groupReport.GroupReport;
+import com.example.speakup.entity.groupReport.GroupReportRepository;
 import com.example.speakup.entity.groups.Group;
 import com.example.speakup.entity.groups.GroupRepository;
+import com.example.speakup.entity.report.Report;
+import com.example.speakup.entity.report.ReportRepository;
 import com.example.speakup.entity.teacher.Teacher;
 import com.example.speakup.entity.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,8 @@ import java.util.Map;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final TeacherRepository teacherRepository;
+    private final GroupReportRepository groupReportRepository;
+    private final ReportRepository reportRepository;
 
     public List<Group> getGroupByTeacher(Authentication authentication){
         Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
@@ -51,6 +57,39 @@ public class GroupService {
         int id = Integer.parseInt(map.get("id"));
         Group group = groupRepository.findById(id).get();
         groupRepository.delete(group);
+
+        try {
+            resp.sendRedirect("/group");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateGroup(Map<String,String> map, HttpServletResponse resp){
+        String name = map.get("name");
+        String price = map.get("price");
+        int id = Integer.parseInt(map.get("id"));
+
+        Group group = groupRepository.findById(id).get();
+        List<GroupReport> groupReports = groupReportRepository.findAllByGroup(group).get();
+
+        if (!name.equals("")){
+            group.setName(name);
+        }
+
+        if (!price.equals("")){
+
+            for (GroupReport groupReport : groupReports) {
+
+                Report report = reportRepository.findById(groupReport.getReport().getId()).get();
+                report.setTotalPrice(report.getTotalPrice() - group.getPrice() + Integer.parseInt(price));
+                reportRepository.save(report);
+            }
+
+            group.setPrice(Integer.valueOf(price));
+        }
+
+        groupRepository.save(group);
 
         try {
             resp.sendRedirect("/group");

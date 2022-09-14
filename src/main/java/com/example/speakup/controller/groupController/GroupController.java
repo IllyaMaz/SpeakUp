@@ -43,4 +43,9 @@ public class GroupController {
     public void postDeleteGroup(@RequestParam Map<String,String> map, HttpServletResponse resp){
         groupService.deleteGroup(map,resp);
     }
+
+    @PostMapping("/update")
+    public void updateGroup(@RequestParam Map<String,String> map, HttpServletResponse resp){
+        groupService.updateGroup(map,resp);
+    }
 }

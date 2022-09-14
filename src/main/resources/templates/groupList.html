@@ -67,10 +67,44 @@
     <div class="card-header" th:text="${group.name}"></div>
     <div class="card-body">
         <h6 th:text="'Цена за урок: ' + ${group.price}"></h6>
+        <div class="modal fade" id="exampleModal-1" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabe">Новая група</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/group/update" method="post">
+                            <input type="hidden" name="id" th:value="${group.id}">
+                            <div class="mb-3">
+                                <label for="recipient-name-1" class="col-form-label">Имя:</label>
+                                <input type="text" class="form-control" id="recipient-name-1" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-price-1" class="col-form-label">Цена за урок:</label>
+                                <input type="text" class="form-control" id="recipient-price-1"name="price">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="submit" class="btn btn-primary">Редактировать</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <form action="/group/delete" method="post">
             <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#exampleModal-1">
+                    Редактировать
+                </button>
+
                 <input type="hidden" th:value="${group.id}" name="id">
-                <button type="submit" class="btn btn-danger" >Удалить</button>
+                <button type="submit" class="btn btn-danger ms-1" >Удалить</button>
             </div>
         </form>
     </div>
