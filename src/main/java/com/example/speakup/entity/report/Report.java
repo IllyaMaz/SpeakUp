@@ -20,8 +20,6 @@ public class Report {
     @Column
     private LocalDate dates;
 
-    @Column
-    private Integer totalPrice;
 
     @Column
     private Integer numberOfLessons;

@@ -71,21 +71,12 @@ public class GroupService {
         int id = Integer.parseInt(map.get("id"));
 
         Group group = groupRepository.findById(id).get();
-        List<GroupReport> groupReports = groupReportRepository.findAllByGroup(group).get();
 
         if (!name.equals("")){
             group.setName(name);
         }
 
         if (!price.equals("")){
-
-            for (GroupReport groupReport : groupReports) {
-
-                Report report = reportRepository.findById(groupReport.getReport().getId()).get();
-                report.setTotalPrice(report.getTotalPrice() - group.getPrice() + Integer.parseInt(price));
-                reportRepository.save(report);
-            }
-
             group.setPrice(Integer.valueOf(price));
         }
 

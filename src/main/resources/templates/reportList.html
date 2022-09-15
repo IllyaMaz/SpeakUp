@@ -23,6 +23,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/group" style="color: white">Групы</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/calculate" style="color: white">Расчет</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -35,14 +38,12 @@
 
 
 <div class="card mx-auto" th:each="report: ${reports}" style="width: 90%; margin-bottom: 1%">
-    <input type="hidden" >
 
     <a th:href="@{/report/date/{id}(id=${report.id})}" >
     <div class="card-header" th:text="${report.dates}"></div>
     </a>
     <div class="card-body">
         <h6 th:text="'Количество уроков: ' + ${report.numberOfLessons}"></h6>
-        <h5 th:text="'Зароботок за день: ' + ${report.totalPrice}"></h5>
         <form action="/report/delete" method="post">
         <div class="d-flex justify-content-end">
             <input type="hidden" th:value="${report.id}" name="id">

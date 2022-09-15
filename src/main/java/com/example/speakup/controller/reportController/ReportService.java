@@ -49,7 +49,6 @@ public class ReportService {
 
         Report report = new Report();
         report.setNumberOfLessons(0);
-        report.setTotalPrice(0);
         report.setTeacher(teacher);
         report.setDates(LocalDate.now());
 
@@ -97,7 +96,6 @@ public class ReportService {
         Group group = groupRepository.findById(groupId).get();
 
         report.setNumberOfLessons(report.getNumberOfLessons() + 1);
-        report.setTotalPrice(report.getTotalPrice() + group.getPrice());
         reportRepository.save(report);
 
         GroupReport groupReport = new GroupReport();
@@ -115,12 +113,9 @@ public class ReportService {
         Group group = groupRepository.findById(groupId).get();
 
         report.setNumberOfLessons(report.getNumberOfLessons() - 1);
-        report.setTotalPrice(report.getTotalPrice() - group.getPrice());
-
         reportRepository.save(report);
 
         GroupReport groupReport = groupReportRepository.findByGroupAndAndReport(group,report).get();
-
         groupReportRepository.delete(groupReport);
     }
 
