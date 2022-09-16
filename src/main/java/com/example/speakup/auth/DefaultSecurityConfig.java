@@ -28,7 +28,7 @@ public class DefaultSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/createUser").permitAll()
-                .antMatchers("/error/createUser").permitAll()
+                .antMatchers("/error/*").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

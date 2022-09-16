@@ -70,7 +70,7 @@
     <div class="card-header" th:text="${group.name}"></div>
     <div class="card-body">
         <h6 th:text="'Цена за урок: ' + ${group.price}"></h6>
-        <div class="modal fade" id="exampleModal-1" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
+        <div class="modal fade" th:id="modal-warning+${group.id }" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -102,7 +102,7 @@
 
         <form action="/group/delete" method="post">
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#exampleModal-1">
+                <button type="button" class="btn btn-warning " data-bs-toggle="modal"  th:attr="data-bs-target='#modal-warning'+${group.id }">
                     Редактировать
                 </button>
 

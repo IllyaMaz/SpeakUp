@@ -24,8 +24,8 @@ public class AuthService {
         return getUser().getUsername();
     }
 
-    private User getUser(){
-        return (User) getAuthentication().getPrincipal();
+    private CustomUserDetails getUser(){
+        return (CustomUserDetails) getAuthentication().getPrincipal();
     }
 
     private Authentication getAuthentication(){
