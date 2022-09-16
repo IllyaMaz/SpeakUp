@@ -1,6 +1,5 @@
 package com.example.speakup.controller.calculateController;
 
-import com.example.speakup.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,6 +25,10 @@ public class CalculateController {
         if (!map.isEmpty()){
             modelAndView.addObject("dates",calculateService.date(map));
             modelAndView.addObject("hours",calculateService.sum(map,authentication));
+            modelAndView.addObject("sumPrice",calculateService.sumPrice(map,authentication));
+            modelAndView.addObject("exist", "true");
+        } else {
+            modelAndView.addObject("exist", "false");
         }
         return modelAndView;
     }

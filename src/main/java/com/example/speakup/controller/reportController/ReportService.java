@@ -16,12 +16,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -119,5 +117,47 @@ public class ReportService {
         groupReportRepository.delete(groupReport);
     }
 
+    public Integer getSumForMont(Authentication authentication){
+        Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        LocalDate now = LocalDate.now();
+        String[] arr = String.valueOf(now).split("-");
+        Integer day = Integer.valueOf(arr[2]);
+        Integer month = Integer.valueOf(arr[1]);
+        Integer year = Integer.valueOf(arr[0]);
+        String from;
+        String on;
+        if (day < 21){
+            month--;
+            from = year + "-" + month + "-21" ;
+            month++;
+            on = year + "-" + month + "-20";
+        } else {
+            from = year + "-" + month + "-21" ;
+            month++;
+            if (month == 13){
+                month=1;
+                year++;
+            }
+            on = year + "-" + month + "-20";
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+        simpleDateFormat.applyPattern("yyyy-MM-dd");
+
+        try {
+            Date fromDate = simpleDateFormat.parse(from);
+            Date onDate = simpleDateFormat.parse(on);
+
+            Integer sumBetweenDate = groupReportRepository.sumBetweenDate(userId, fromDate, onDate);
+            if (sumBetweenDate == null){
+                return 0;
+            }
+            return sumBetweenDate;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
 }

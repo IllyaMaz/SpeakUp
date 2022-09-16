@@ -39,7 +39,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Розщёт</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Расчет</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -108,14 +108,15 @@
     </div>
 </div>
 
-<div th:if="dates == ''"></div>
-<div th:unless="dates == ''">
+<div th:if="${exist} == 'false'"></div>
+<div th:if="${exist} == 'true'">
 <div class="card mx-auto" style="width: 90%; margin-bottom: 1%" >
 
     <div class="card-header" th:text="${dates}"></div>
 
     <div class="card-body">
         <h6 th:text="'Количество часов: ' + ${hours}"></h6>
+        <h6 th:text="'Сумма: ' + ${sumPrice}"></h6>
     </div>
 </div>
 </div>

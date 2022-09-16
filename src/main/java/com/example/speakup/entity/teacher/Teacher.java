@@ -1,7 +1,6 @@
 package com.example.speakup.entity.teacher;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Data

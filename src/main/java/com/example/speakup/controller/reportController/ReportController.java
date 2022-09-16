@@ -28,6 +28,7 @@ public class ReportController {
         ModelAndView modelAndView = new ModelAndView("reportList");
         modelAndView.addObject("reports",reportService.getReportByTeacher(authentication));
         modelAndView.addObject("teacher",1);
+        modelAndView.addObject("sumForMonth",reportService.getSumForMont(authentication));
         return modelAndView;
     }
 

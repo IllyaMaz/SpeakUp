@@ -1,11 +1,9 @@
 package com.example.speakup.controller.groupController;
 
 import com.example.speakup.auth.CustomUserDetails;
-import com.example.speakup.entity.groupReport.GroupReport;
 import com.example.speakup.entity.groupReport.GroupReportRepository;
 import com.example.speakup.entity.groups.Group;
 import com.example.speakup.entity.groups.GroupRepository;
-import com.example.speakup.entity.report.Report;
 import com.example.speakup.entity.report.ReportRepository;
 import com.example.speakup.entity.teacher.Teacher;
 import com.example.speakup.entity.teacher.TeacherRepository;

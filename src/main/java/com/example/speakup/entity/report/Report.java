@@ -3,11 +3,9 @@ package com.example.speakup.entity.report;
 
 import com.example.speakup.entity.teacher.Teacher;
 import lombok.Data;
-
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+
 
 
 @Data
@@ -19,7 +17,6 @@ public class Report {
 
     @Column
     private LocalDate dates;
-
 
     @Column
     private Integer numberOfLessons;
