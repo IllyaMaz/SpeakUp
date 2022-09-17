@@ -1,9 +1,10 @@
 package com.example.speakup.controller.calculateController;
 
 import com.example.speakup.auth.CustomUserDetails;
-import com.example.speakup.controller.teacherController.TeacherService;
 import com.example.speakup.entity.groupReport.GroupReportRepository;
 import com.example.speakup.entity.report.ReportRepository;
+import com.example.speakup.entity.teacher.Teacher;
+import com.example.speakup.entity.teacher.TeacherRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,22 @@ import java.util.*;
 public class CalculateService {
     private ReportRepository reportRepository;
     private GroupReportRepository groupReportRepository;
+    private TeacherRepository teacherRepository;
     private List<String> day = new ArrayList<>(Arrays.asList("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
             "17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"));
     private Map<String,String> month = new HashMap<>();
-
-    private List<String> month1 = new ArrayList<>(Arrays.asList("Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август",
-            "Сентябрь","Октябрь","Ноябрь","Декабрь"));
     private List<String> years = new ArrayList<>(Arrays.asList("2022","2023","2024","2025","2026","2027","2028","2029","2030","2031",
             "2032","2033","2034","2035","2036","2037","2038","2039","2040"));
 
     @Autowired
-    public CalculateService(ReportRepository reportRepository, GroupReportRepository groupReportRepository){
+    public CalculateService(
+            ReportRepository reportRepository,
+            GroupReportRepository groupReportRepository,
+            TeacherRepository teacherRepository
+    ){
         this.reportRepository = reportRepository;
         this.groupReportRepository=groupReportRepository;
+        this.teacherRepository=teacherRepository;
 
         month.put("1","Январь");
         month.put("2","Февраль");
@@ -50,29 +54,17 @@ public class CalculateService {
 
     public Integer sum(Map<String,String> map, Authentication authentication){
 
-        String from = map.get("yearFrom") + "-" + map.get("monthFrom") + "-" + map.get("dayFrom");
-        String on = map.get("yearOn") + "-" + map.get("monthOn") + "-" + map.get("dayOn");
+        Date from = genFromDate(map);
+        Date on = genOnDate(map);
 
         Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern("yyyy-MM-dd");
-        try {
-            Date fromDate = format.parse(from);
-            Date onDate = format.parse(on);
+        Integer sum = reportRepository.sum(userId, from, on);
 
-            Integer sum = reportRepository.sum(userId, fromDate, onDate);
-
-            if (sum == null){
-                return 0;
-            }else {
-                return sum;
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (sum == null){
+            return 0;
+        }else {
+            return sum;
         }
-
-        return 0;
     }
 
     public String date(Map<String,String> map){
@@ -88,52 +80,73 @@ public class CalculateService {
     }
 
     public Integer sumPrice(Map<String,String> map,Authentication authentication){
-        String from = map.get("yearFrom") + "-" + map.get("monthFrom") + "-" + map.get("dayFrom");
-        String on = map.get("yearOn") + "-" + map.get("monthOn") + "-" + map.get("dayOn");
+        Date from = genFromDate(map);
+        Date on = genOnDate(map);
 
         Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern("yyyy-MM-dd");
+        Integer sum = groupReportRepository.sumBetweenDate(userId,from,on);
 
-        try {
-            Date fromDate = format.parse(from);
-            Date onDate = format.parse(on);
-
-            Integer sum = groupReportRepository.sumBetweenDate(userId,fromDate,onDate);
-
-            if (sum == null){
-                return 0;
-            }
-            return sum;
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (sum == null){
+            return 0;
         }
-        return 0;
+        return sum;
     }
 
     public Integer sumHead(Map<String,String> map){
-        String from = map.get("yearFrom") + "-" + map.get("monthFrom") + "-" + map.get("dayFrom");
-        String on = map.get("yearOn") + "-" + map.get("monthOn") + "-" + map.get("dayOn");
+        Date from = genFromDate(map);
+        Date on = genOnDate(map);
 
         Integer userId = Integer.valueOf(map.get("teacherId"));
+        Integer sum = reportRepository.sum(userId, from, on);
+
+        if (sum == null){
+            return 0;
+        }else {
+            return sum;
+        }
+    }
+
+    public List<Map<String,Integer>> mapGroupCount(Map<String,String> map){
+        Date from = genFromDate(map);
+        Date on = genOnDate(map);
+        int teacherId = Integer.parseInt(map.get("teacherId"));
+
+        return groupReportRepository.mapGroupCount(teacherId,from,on);
+    }
+
+    private Date genFromDate(Map<String,String> map){
+        String from = map.get("yearFrom") + "-" + map.get("monthFrom") + "-" + map.get("dayFrom");
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("yyyy-MM-dd");
+
         try {
             Date fromDate = format.parse(from);
-            Date onDate = format.parse(on);
-
-            Integer sum = reportRepository.sum(userId, fromDate, onDate);
-
-            if (sum == null){
-                return 0;
-            }else {
-                return sum;
-            }
-
+            return fromDate;
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return null;
+    }
 
-        return 0;
+    private Date genOnDate(Map<String,String> map){
+        String on = map.get("yearOn") + "-" + map.get("monthOn") + "-" + map.get("dayOn");
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("yyyy-MM-dd");
+
+        try {
+            Date onDate = format.parse(on);
+            return onDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Integer sumPriceForHeadOfStudies(Map<String,String> map){
+        Date from = genFromDate(map);
+        Date on = genOnDate(map);
+        int teacherId = Integer.parseInt(map.get("teacherId"));
+
+        return groupReportRepository.sumBetweenDate(teacherId,from,on);
     }
 }

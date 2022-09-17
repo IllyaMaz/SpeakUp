@@ -46,6 +46,8 @@ public class CalculateController {
             modelAndView.addObject("dates",calculateService.date(map));
             modelAndView.addObject("hours",calculateService.sumHead(map));
             modelAndView.addObject("teacher",teacherService.getTeacherById(Integer.valueOf(map.get("teacherId"))));
+            modelAndView.addObject("counts", calculateService.mapGroupCount(map));
+            modelAndView.addObject("sumPrice",calculateService.sumPriceForHeadOfStudies(map));
             modelAndView.addObject("exist", "true");
         } else {
             modelAndView.addObject("exist", "false");

@@ -125,8 +125,16 @@
         <div class="card-header" th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></div>
 
         <div class="card-body">
-            <h6 th:text="${dates}"></h6>
-            <h6 th:text="'Количество часов: ' + ${hours}"></h6>
+            <h6 th:text="'Промежуток: ' + ${dates}"></h6>
+        </div>
+        <div class="card-body">
+            <div th:each="count: ${counts}">
+                <h6 th:text="${count.name} + ': ' + ${count.count}"></h6>
+            </div>
+        </div>
+        <div class="card-body">
+            <h6 th:text="'Сума часов: ' + ${hours}"></h6>
+            <h6 th:text="'Сума: ' + ${sumPrice}"></h6>
         </div>
     </div>
 </div>
