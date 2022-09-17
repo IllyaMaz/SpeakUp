@@ -1,5 +1,6 @@
 package com.example.speakup.controller.calculateController;
 
+import com.example.speakup.controller.teacherController.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Controller
 public class CalculateController {
     private final CalculateService calculateService;
+    private final TeacherService teacherService;
 
     @GetMapping
     public ModelAndView get(@RequestParam Map<String,String> map, Authentication authentication){
@@ -26,6 +28,24 @@ public class CalculateController {
             modelAndView.addObject("dates",calculateService.date(map));
             modelAndView.addObject("hours",calculateService.sum(map,authentication));
             modelAndView.addObject("sumPrice",calculateService.sumPrice(map,authentication));
+            modelAndView.addObject("exist", "true");
+        } else {
+            modelAndView.addObject("exist", "false");
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/teacher")
+    public ModelAndView getCalculateTeacher(@RequestParam Map<String,String> map){
+        ModelAndView modelAndView = new ModelAndView("headCalculate");
+        modelAndView.addObject("teachers",teacherService.getAllTeacher());
+        modelAndView.addObject("years",calculateService.getYears());
+        modelAndView.addObject("months",calculateService.getMonth());
+        modelAndView.addObject("days",calculateService.getDay());
+        if (!map.isEmpty()){
+            modelAndView.addObject("dates",calculateService.date(map));
+            modelAndView.addObject("hours",calculateService.sumHead(map));
+            modelAndView.addObject("teacher",teacherService.getTeacherById(Integer.valueOf(map.get("teacherId"))));
             modelAndView.addObject("exist", "true");
         } else {
             modelAndView.addObject("exist", "false");

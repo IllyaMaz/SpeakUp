@@ -1,6 +1,7 @@
 package com.example.speakup.controller.calculateController;
 
 import com.example.speakup.auth.CustomUserDetails;
+import com.example.speakup.controller.teacherController.TeacherService;
 import com.example.speakup.entity.groupReport.GroupReportRepository;
 import com.example.speakup.entity.report.ReportRepository;
 import lombok.Getter;
@@ -107,6 +108,32 @@ public class CalculateService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return 0;
+    }
+
+    public Integer sumHead(Map<String,String> map){
+        String from = map.get("yearFrom") + "-" + map.get("monthFrom") + "-" + map.get("dayFrom");
+        String on = map.get("yearOn") + "-" + map.get("monthOn") + "-" + map.get("dayOn");
+
+        Integer userId = Integer.valueOf(map.get("teacherId"));
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("yyyy-MM-dd");
+        try {
+            Date fromDate = format.parse(from);
+            Date onDate = format.parse(on);
+
+            Integer sum = reportRepository.sum(userId, fromDate, onDate);
+
+            if (sum == null){
+                return 0;
+            }else {
+                return sum;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return 0;
     }
 }
