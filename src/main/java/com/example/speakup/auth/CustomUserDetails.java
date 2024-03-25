@@ -12,6 +12,7 @@ public class CustomUserDetails implements UserDetails {
     Teacher teacher;
     public CustomUserDetails(Teacher teacher){
         this.teacher=teacher;
+
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
